@@ -217,8 +217,10 @@ def _unpack_schema(
             if isinstance(col, str):
                 unnamed = not col and col not in schema_overrides
                 col = f"column_{i}" if unnamed else col
-            else:
+            elif isinstance(col, Sequence) and col and isinstance(col[0], str):
                 col = col[0]
+            else:
+                raise TypeError(f"column names must be strings, got {col!r} of type {type(col).__name__!r}")
             column_names.append(col)
 
     if n_expected is not None and len(column_names) != n_expected:
